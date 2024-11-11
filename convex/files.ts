@@ -1,5 +1,6 @@
 import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { getUser } from './users';
 
 export const createFile = mutation({
     args: {
@@ -7,10 +8,16 @@ export const createFile = mutation({
         orgId: v.string(),
     },
     async handler(ctx, args) {
-        const identity = ctx.auth.getUserIdentity();
+        const identity = await ctx.auth.getUserIdentity();
         
         if (!identity) {
             throw new ConvexError("You must be signed in to upload a file");
+        }
+
+        const user = await getUser(ctx, identity.tokenIdentifier);
+
+        if (!user.orgIds.includes(args.orgId) && user.tokenIdentifier !== identity.tokenIdentifier) {
+            throw new ConvexError("You must be a member of the organization to upload a file");
         }
 
         await ctx.db.insert("files", {
