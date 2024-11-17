@@ -18,7 +18,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { z } from "zod"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { set, useForm } from "react-hook-form"
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast"
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -27,6 +30,7 @@ const formSchema = z.object({
 });
 
 export default function Home() {
+  const { toast } = useToast()
   const organization= useOrganization();
   const user = useUser();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
@@ -40,8 +44,6 @@ export default function Home() {
   const fileRef = form.register("file");
 
 async function onSubmit(values: z.infer<typeof formSchema>) {
-  console.log(values)
-  console.log(values.file)
   if (!orgId) return;
   const postUrl = await generateUploadUrl();
   
@@ -52,17 +54,39 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
   });
   const { storageId } = await result.json();
 
-  createFile({
+  try {
+  await createFile({
     name: values.title,
     fileId: storageId,
     orgId,
   });
+
+  form.reset();
+
+  setIsFileDialogOpen(false);
+
+  toast({
+    variant: "success",
+    title: "File uploaded!",
+    description: "Your file is ready to be viewed.",
+  })
+  } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Something went wrong!",
+      description: "Your file could not be uploaded, try again later.",
+    })
+  }
 }
 
-  let orgId = string | undefined = undefined;
+
+
+  let orgId: string | undefined = undefined;
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
+
+  const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
 
   const files = useQuery(api.files.getFiles, orgId ? { orgId } : "skip");
   const createFile = useMutation(api.files.createFile);
@@ -72,7 +96,10 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold">Files</h1>
 
-          <Dialog>
+          <Dialog open={isFileDialogOpen} onOpenChange={(isOpen) => {
+            setIsFileDialogOpen(isOpen);
+            form.reset();
+          }}>
             <DialogTrigger asChild>
               <Button onClick={() => {
                 }}>
@@ -111,7 +138,13 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
                         </FormItem>
                       )}
                     />
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit"
+                      disabled={form.formState.isSubmitting}
+                      className="flex gap-2"
+                    >
+                    {form.formState.isSubmitting && <Loader2 className="h-4 w-4 animate-spin"/>}
+                      Submit
+                    </Button>
                   </form>
                 </Form>
                 </DialogDescription>
