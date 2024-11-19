@@ -26,12 +26,15 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";  
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 function FileCardActions() {
+  const deleteFile = (useMutation(api.files.deleteFile));
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
     return (
         <>
         <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-          <AlertDialogTrigger>Open</AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -42,15 +45,24 @@ function FileCardActions() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={}>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={() => {
+                // TODO: actually delete file
+              }}>
+                Continue
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
         <DropdownMenu>
-          <DropdownMenuTrigger><EllipsisVertical /></DropdownMenuTrigger>
+          <DropdownMenuTrigger>
+            <EllipsisVertical />
+          </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem className="flex gap-1 text-red-500 items-center cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => setIsConfirmOpen(true)} 
+              className="flex gap-1 text-red-500 items-center cursor-pointer"
+            >
                 <Trash2Icon className="w-4 h-4" /> Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
