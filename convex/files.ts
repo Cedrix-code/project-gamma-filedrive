@@ -95,5 +95,7 @@ export const deleteFile = mutation({
         if (!hasAccess) {
             throw new ConvexError("you do not have access to delete this file");
         }
+
+        await ctx.db.delete(args.fileId);
     },
 });

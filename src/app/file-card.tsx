@@ -28,7 +28,7 @@ import {
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-function FileCardActions() {
+function FileCardActions({ File }: { File: Doc<"files"> }) {
   const deleteFile = (useMutation(api.files.deleteFile));
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -47,6 +47,9 @@ function FileCardActions() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={() => {
                 // TODO: actually delete file
+                deleteFile({ 
+                  fileId: file._id
+                });
               }}>
                 Continue
               </AlertDialogAction>
@@ -77,7 +80,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
           <CardHeader className="relative">
             <CardTitle>{file.name}</CardTitle>
             <div className="absolute top-2 right-2">
-                <FileCardActions />
+                <FileCardActions file={file} />
             </div>
             {/* <CardDescription>Card Description</CardDescription> */}
           </CardHeader>
