@@ -22,6 +22,9 @@
     --success: 145 63% 49%;
     --success-foreground: 210 40% 98%;
 
+    --info: 208 100% 51%;
+    --info-foreground: 210 40% 98%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;

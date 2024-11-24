@@ -27,6 +27,7 @@ export const createFile = mutation({
         orgId: v.string(),
     },
     async handler(ctx, args) {
+        // throw new Error("createFile is not implemented");
         const identity = await ctx.auth.getUserIdentity();
         
         if (!identity) {
@@ -89,7 +90,7 @@ export const deleteFile = mutation({
         const hasAccess = await hasAccessToOrg(
             ctx, 
             identity.tokenIdentifier, 
-            file.orgId
+            file.orgId!
         );
 
         if (!hasAccess) {

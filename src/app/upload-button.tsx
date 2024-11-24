@@ -68,7 +68,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
   toast({
     variant: "success",
     title: "File uploaded!",
-    description: "Your file is ready to be viewed.",
+    description: "Your file is ready to view.",
   })
   } catch (error) {
     toast({
