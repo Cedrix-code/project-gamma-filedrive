@@ -1,6 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 import { mutation, MutationCtx, query, QueryCtx } from './_generated/server';
 import { getUser } from './users';
+import { fileTypes } from './schema';
 
 export const generateUploadUrl = mutation(async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -25,6 +26,7 @@ export const createFile = mutation({
         name: v.string(),
         fileId: v.id("_storage"),
         orgId: v.string(),
+        type: fileTypes,
     },
     async handler(ctx, args) {
         // throw new Error("createFile is not implemented");
@@ -44,6 +46,7 @@ export const createFile = mutation({
             name: args.name,
             orgId: args.orgId,
             fileId: args.fileId,
+            type: args.type,
         });
     },
 });
