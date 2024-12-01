@@ -13,7 +13,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"  ;
-import { EllipsisVertical, FileText, GanttChartIcon, ImageIcon, Sheet, TextIcon, Trash2Icon } from "lucide-react";
+import { EllipsisVertical, FileText, ImageIcon, Sheet, Trash2Icon } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -23,7 +23,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";  
 import { ReactNode, useState } from "react";
 import { useMutation } from "convex/react";
@@ -110,10 +109,11 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
           <CardContent>
             {
               file.type === "image" && (
-              <Image alt={file.name} width="200" height="100" src={getFileUrl(file.fileId)}  />)
+                <Image alt={file.name} width="200" height="100" src={getFileUrl(file.fileId)} unoptimized  />
+              )
             }
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex justify-center">
             <Button>Download</Button>
           </CardFooter>
         </Card>
