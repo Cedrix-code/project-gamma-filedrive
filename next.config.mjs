@@ -2,7 +2,10 @@
 const nextConfig = {
     images: {
         remotePatterns: [
-            { hostname: "marvelous-lobster-162.convex.cloud" },
+            { 
+                protocol: "https",
+                hostname: "marvelous-lobster-162.convex.cloud" 
+            },
         ],
     },
 };

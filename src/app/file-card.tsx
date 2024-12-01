@@ -24,7 +24,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";  
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useToast } from "@/hooks/use-toast";
@@ -94,6 +94,12 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
     csv: <Sheet />
   } as Record<Doc<"files">["type"], ReactNode>;
 
+  useEffect(() => {
+    if (file.type === "image") {
+      console.log("Image URL:", getFileUrl(file.fileId));
+    }
+  }, [file]);
+
     return (
         <Card>
           <CardHeader className="relative">
@@ -104,14 +110,16 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
             <div className="absolute top-2 right-2">
                 <FileCardActions file={file} />
             </div>
-            {/* <CardDescription>Card Description</CardDescription> */}
           </CardHeader>
           <CardContent>
-            {
-              file.type === "image" && (
-                <Image alt={file.name} width="200" height="100" src={getFileUrl(file.fileId)} unoptimized  />
-              )
-            }
+            {file.type === "image" && (
+                <Image 
+                  alt={file.name} 
+                  width="200" 
+                  height="100" 
+                  src={getFileUrl(file.fileId)}
+                />
+            )}
           </CardContent>
           <CardFooter className="flex justify-center">
             <Button>Download</Button>
